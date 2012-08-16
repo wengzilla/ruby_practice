@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+require 'rspec'
 require File.dirname(__FILE__) + '/../processor'
 
 describe SingleCharacterMatcher do
@@ -24,7 +25,7 @@ describe SingleCharacterMatcher do
     SingleCharacterMatcher.contains?('1', '1234').should be_true
     SingleCharacterMatcher.contains?('a', 'abac').should be_false
   end
-
+  # (^a[^a]*$|^[^a]a[^a]$|^[^a]*a$)
 end
 
 describe CharacterSequenceMatcher do
@@ -47,41 +48,41 @@ describe CharacterSequenceMatcher do
 
 end
 
-=begin
-describe VowlerPairMatcher do
+begin
+  describe VowlerPairMatcher do
 
-  it "it should find two vowels following each other" do
-    VowlerPairMatcher.check("qwrtp").shoulde be_false
-    VowlerPairMatcher.check("qwer").should be_false
-    VowlerPairMatcher.check("qweer").should be_true
-    VowlerPairMatcher.check("qwe.rr").should be_false
-    VowlerPairMatcher.check("aas").should be_true
-    VowlerPairMatcher.check("the\ngray\nass").should be_false
-    VowlerPairMatcher.check("zo\noey").should be_true
-    VowlerPairMatcher.check("oey").should be_true
-    VowlerPairMatcher.check("booey").should be_true
-    VowlerPairMatcher.check("ZoEy").should be_true
-    VowlerPairMatcher.check("a e u").should be_false
-    VowlerPairMatcher.check("arg").should be_false
+    it "it should find two vowels following each other" do
+      VowlerPairMatcher.check("qwrtp").should be_false
+      VowlerPairMatcher.check("qwer").should be_false
+      VowlerPairMatcher.check("qweer").should be_true
+      VowlerPairMatcher.check("qwe.rr").should be_false
+      VowlerPairMatcher.check("aas").should be_true
+      VowlerPairMatcher.check("the\ngray\nass").should be_false
+      VowlerPairMatcher.check("zo\noey").should be_true
+      VowlerPairMatcher.check("oey").should be_true
+      VowlerPairMatcher.check("booey").should be_true
+      VowlerPairMatcher.check("ZoEy").should be_true
+      VowlerPairMatcher.check("a e u").should be_false
+      VowlerPairMatcher.check("arg").should be_false
+    end
+
   end
 
+  describe RepetitionMatcher do
+    it "should find one or more repetition of a letter" do
+      RepetitionMatcher.check("a abc").should be_false
+      RepetitionMatcher.check("baaac").should be_true
+      RepetitionMatcher.check("BaAaC").should be_true
+      RepetitionMatcher.check("abc").should be_false
+    end
+
+    it "should extract the last repetition" do
+      RepetitionMatcher.last("zooxyleem").should == "ee"
+      RepetitionMatcher.last("iirsen\nbook;haas").should == "aa"
+      RepetitionMatcher.last("Iirsen book ha.as").should == "aa"
+      RepetitionMatcher.last("aAeEiI").should == "iI"
+      RepetitionMatcher.last("aAe\nEiI").should == "iI"
+      RepetitionMatcher.last("aAeEiIUU").should == "UU"
+    end
+  end
 end
-
-describe RepetitionMatcher do
-  it "should find one or more repetition of a letter" do
-    RepetitionMatcher.check("a abc").should be_false
-    RepetitionMatcher.check("baaac").should be_true
-    RepetitionMatcher.check("BaAaC").should be_true
-    RepetitionMatcher.check("abc").should be_false
-  end
-
-  it "should extract the last repetition" do
-    RepetitionMatcher.last("zooxyleem").should == "ee"
-    RepetitionMatcher.last("iirsen\nbook;haas").should == "aa"
-    RepetitionMatcher.last("Iirsen book ha.as").should == "aa"
-    RepetitionMatcher.last("aAeEiI").should == "iI"
-    RepetitionMatcher.last("aAe\nEiI").should == "iI"
-    RepetitionMatcher.last("aAeEiIUU").should == "UU"
-  end
-end
-=end
